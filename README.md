@@ -10,6 +10,7 @@
 [image5]: ./myTrafficSigns/No%20entry.jpg "No entry"
 [image6]: ./myTrafficSigns/Wild%20animals%20crossing.jpg "Wild animals crossing"
 [image7]: ./myTrafficSigns/Pedestrians.jpg "Pedestrians"
+[image8]: ./images/softmax.png "Softmax"
 
 **Build a Traffic Sign Recognition Project**
 
@@ -92,8 +93,8 @@ The model architecture is based on the LeNet model architecture. I added dropout
 #### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
 To train the model, I used an Adam optimizer and the following hyperparameters:
-* batch size: 128
 * number of epochs: 150
+* batch size: 128
 * learning rate: 0.0006
 * keep probability of the dropout layer: 0.5
 
@@ -101,15 +102,15 @@ To train the model, I used an Adam optimizer and the following hyperparameters:
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
+* training set accuracy of 0.995
+* validation set accuracy of 0.966 
+* test set accuracy of 0.951
 
 I used an iterative approach for the optimization of validation accuracy:
 1. First of all, I took the original LeNet model from the course. I had to modify the model in order to feed in input colored images from the training set with shape (32,32,3). I also modified the number of outputs so that it fitted to the 43 unique labels in the training set. The training accuracy was **0.901** but only one of the five new images was correctly classified! The hyperparameters used where the following: 
     *   EPOCHS = 50 
     *   BATCH_SIZE = 128
-    *   learning_rate = 0,001 
+    *   learning_rate = 0.001 
 
 2. After adding the grayscaling preprocessing the validation accuracy increased to **0.912** 
    (same hyperparameters as step 1). From now on, all the five new images where correctly classified, so I tried to achieve a better accuracy with some modification.
@@ -119,18 +120,21 @@ I used an iterative approach for the optimization of validation accuracy:
 4. Now I tried to change the hyperparameters and achieved a validation accuracy of **0.911**. The results suggested some overfitting and I tried to overcome this in the next step. As for now, the hyperparameters used where:
     *   EPOCHS = 50 
     *   BATCH_SIZE = 128
-    *   learning_rate = 0,0007 
+    *   learning_rate = 0.0007 
 
 5. It was time to add a dropout layer: I added it after RELU of final fully connected layer and obtained a validation accuracy of **0.931** 
     *   EPOCHS = 50 
     *   BATCH_SIZE = 128
-    *   learning_rate = 0,0007 
+    *   learning_rate = 0.0007 
     *   dropout probability = 0.5
 
 6. Since I was not satisfied with the results, I tried to add a dropout before each fully connected layer. I kept the same hyperparameters as before and obtained a validation accuracy of **0.936**
 
-7. After some other experiments (I won't write the all here for the sake of simplicity) I reached a validation accuracy of **** with the following hyperparameters:
-
+7. After some other experiments (in which I tried to increase batch size and decrease learning rate) I reached a validation accuracy of **0.966** with the following hyperparameters:
+    *   EPOCHS = 150 
+    *   BATCH_SIZE = 128
+    *   learning_rate = 0.0006 
+    *   dropout probability = 0.5
 
 ### Test a Model on New Images
 
@@ -161,23 +165,15 @@ Here are the results of the prediction:
 
 The model was able to correctly guess 5 of the 5 traffic signs, which gives an accuracy of 100%. 
 
+This compares favorably to the accuracy on the test set of 0.951
+
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
+The softmax probabilities are shown in the following image
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+![alt text][image8]
 
-| Probability         	|     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
-
-
-For the second image ... 
-
+The "worst" classified (even if it was classified correctly) is the "Pedestrians" sign, with a probability of 0.54. This sign was classified as "Right-of-way at the next intersection" with a probability of 0.3. This could be caused by a significant difference in the numbers of images fed to the neural network while training: for the "Pedestrians" sign we have 210 images, while for the "Right-of-way at the next intersection" we have 1170. It's interesting to see that the neural network is still able to classify the image correctly, but I think that a softmax probability of 0.54 should be improved.
 
 ### Dependencies
 This project requires:
